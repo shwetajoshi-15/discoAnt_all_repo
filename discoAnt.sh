@@ -27,6 +27,21 @@ mkdir -p $DISCOANT/$GENE/stringtie
 mkdir -p $DISCOANT/$GENE/sqanti3
 mkdir -p $DISCOANT/$GENE/minimap2_metagene
 
+echo "Extracting the number of reads and read lengths"
+
+   for filename in *.fa
+
+   do
+
+   base=$(basename $filename .fa)
+   echo "On sample : $base"
+
+   cat $DISCOANT/$GENE/fasta/${base}.fa | grep -c "^>" >> $DISCOANT/$GENE/fasta_stats/$GENE_total_number_of_reads.txt
+   bioawk -c fastx '{print length($seq)}' $DISCOANT/$GENE/fasta/${base}.fa > $DISCOANT/$GENE/fasta_stats/$GENE_read_lengths/${base}.txt
+   awk '{/>/&&++a||b+=length()}END{print b/a}' $DISCOANT/$GENE/fasta/${base}.fa >> $DISCOANT/$GENE/fasta_stats/$GENE_mean_read_lengths.txt
+   
+   done
+
 echo "minimap2 - Mapping fasta files to genome"
 
    for filename in $DISCOANT/$GENE/fasta/*.fa
