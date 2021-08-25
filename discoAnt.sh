@@ -29,7 +29,7 @@ mkdir -p $DISCOANT/$GENE/minimap2_metagene
 
 echo "minimap2 - Mapping fasta files to genome"
 
-   for filename in $DISCOANT/$GENE/fasta/downsample_500/*.fa
+   for filename in $DISCOANT/$GENE/fasta/*.fa
 
    do
 
@@ -89,7 +89,7 @@ echo "Creating a metagene FASTA"
 
 echo "Mapping sample FASTA to the metagene"
 
-   for filename in $DISCOANT/$GENE/fasta/downsample_500/*.fa
+   for filename in $DISCOANT/$GENE/fasta/*.fa
 
    do
    base=$(basename $filename .fa)
