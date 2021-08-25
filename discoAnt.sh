@@ -16,7 +16,7 @@
 ## 10. Generate a heatmap and PCA plot
 
 
-source $DIR/scripts/NC_params.txt
+source $DISCOANT/discoAnt_params.txt
 
 echo "Making folders"
 
