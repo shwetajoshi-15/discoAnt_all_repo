@@ -1,0 +1,11 @@
+### Assign paramters for discoAnt.sh ###
+
+GENE=GRIA1
+STRAND=+
+GENE_START=
+GENE_END=
+
+DISCOANT=/path/to/discoAnt
+PROGRAMS=$DISCOANT/programs
+SCRIPTS=$DISCOANT/scripts
+REF_HG38=$DISCOANT/ref_hg38
