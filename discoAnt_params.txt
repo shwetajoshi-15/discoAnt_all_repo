@@ -6,7 +6,9 @@ CHR=chr5
 GENE_START=153489615
 GENE_END=153813873
 
-DISCOANT=/path/to/discoAnt
+FASTA=/path/to/folder/fasta
+DISCOANT=/path/to/folder/discoAnt
+
 PROGRAMS=$DISCOANT/programs
 SCRIPTS=$DISCOANT/scripts
 REF_HG38=$DISCOANT/ref_hg38
