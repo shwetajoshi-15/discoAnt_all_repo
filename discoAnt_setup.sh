@@ -2,6 +2,17 @@
 
 source discoAnt_params.txt
 
+## Installing programs
+
+https://github.com/mortazavilab/TranscriptClean.git $PROGRAMS/.
+git clone https://github.com/ConesaLab/SQANTI3.git $PROGRAMS/.
+git clone https://github.com/Magdoll/cDNA_Cupcake.git $PROGRAMS/.
+
+
+python $PROGRAMS/cDNA_Cupcake/setup.py build
+python $PROGRAMS/cDNA_Cupcake/setup.py install
+
+
 ## GENCODE genome reference and annotation
 
 	wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_34/GRCh38.p13.genome.fa.gz $REF_HG38/.
