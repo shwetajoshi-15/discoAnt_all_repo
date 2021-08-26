@@ -29,7 +29,7 @@ mkdir -p $DISCOANT/$GENE/minimap2_metagene
 
 echo "Extracting the number of reads and read lengths"
 
-   for filename in *.fa
+   for filename in $FASTA/*.fa
 
    do
 
@@ -44,7 +44,7 @@ echo "Extracting the number of reads and read lengths"
 
 echo "minimap2 - Mapping fasta files to genome"
 
-   for filename in $DISCOANT/$GENE/fasta/*.fa
+   for filename in $FASTA/*.fa
 
    do
 
@@ -75,7 +75,7 @@ echo "Correecting the merged primary alignments with TranscriptClean"
 
 echo "Constructing transcripts based on the corrected alignments"
 
-   stringtie -t $DISCOANT/$GENE/minimap2/$GENE_merged_sorted.bam \
+   stringtie -t $DISCOANT/$GENE/transcriptclean/$GENE_clean_sorted.bam \
    -G $REF_HG38/gencode.v35.annotation.gtf \
    -A $DISCOANT/$GENE/stringtie/$GENE_gene_abund.tab \
    -C $DISCOANT/$GENE/stringtie/$GENE_cov_ref.gtf \
@@ -97,14 +97,13 @@ echo "Creating a metagene FASTA"
 
    bedtools getfasta -s -fi $REF_HG38/GRCh38.p13.genome_edit.fa -bed $DISCOANT/$GENE/stringtie/$GENE_clean_all_exons.bed -fo $DISCOANT/$GENE/stringtie/$GENE_clean_meta_gene_exons.fa
 
-
    echo ">meta_gene_$$GENE" > $DISCOANT/$GENE/stringtie/$GENE_clean_meta_gene.fa && \
    cat $DISCOANT/$GENE/stringtie/$GENE_clean_meta_gene_exons.fa | grep -v "^>" | tr -d '\n' >> $DISCOANT/$GENE/stringtie/$GENE_clean_meta_gene.fa && \
    echo >> $DISCOANT/$GENE/stringtie/$GENE_clean_meta_gene.fa 
 
 echo "Mapping sample FASTA to the metagene"
 
-   for filename in $DISCOANT/$GENE/fasta/*.fa
+   filename in $FASTA/*.fa
 
    do
    base=$(basename $filename .fa)
