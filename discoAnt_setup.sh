@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source discoAnt_params.txt
+conda env create -f $DISCOANT/discoAnt.env.yml
 
 ## Installing programs
 
