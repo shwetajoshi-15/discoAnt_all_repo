@@ -52,7 +52,7 @@ echo "minimap2 - Mapping fasta files to genome"
    echo "On sample : $base"
 
    minimap2 -ax splice $REF_HG38/GRCh38.p13.genome_edit.fa \
-   $DISCOANT/$GENE/fasta/downsample_500/${base}.fa > $DISCOANT/$GENE/minimap2/${base}.sam
+   $DISCOANT/$GENE/fasta/${base}.fa > $DISCOANT/$GENE/minimap2/${base}.sam
    samtools view -S -h -b $DISCOANT/$GENE/minimap2/${base}.sam | samtools sort - > $DISCOANT/$GENE/minimap2/${base}_sorted.bam
    samtools view -h -F 2308 $DISCOANT/$GENE/minimap2/${base}_sorted.bam | samtools sort - > $DISCOANT/$GENE/minimap2/${base}_pri_sorted.bam 
    
