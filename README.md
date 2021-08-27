@@ -6,6 +6,6 @@ The repository is under-construction.
 3. bash discoAnt_setup.sh
 4. conda activate discoAnt.env
 5. cd /path/to/folder/discoAnt/programs/cDNA_Cupcake
-  python setup.py build
-  python setup.py install
-6. Submit discoAnt.sh in the appropriate submission script
+6. python setup.py build
+7. python setup.py install
+8. Submit discoAnt.sh in the appropriate submission script
