@@ -21,7 +21,7 @@ Date_of_sequencing.barcode01.fa - e.g. 2019_12_16.barcode01.fa
 1.a. Generates a file with no. of reads
 1.b. average read length
 1.c. read length in each barcode/sample 
-2. Align the sample fasta files to reference genome
+2. Align (and correcting) the sample fasta files to reference genome
 3. Merge the primary alignments
 4. Generate transcript files (GTF) for the merged alignments
 4. Classify the transcripts based on known annotations 
