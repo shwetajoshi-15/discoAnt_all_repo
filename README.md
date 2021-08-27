@@ -1,6 +1,12 @@
 # discoAnt
 The repository is under-construction.
 
+* Prepare FASTA files in a folder *
+* The fasta files need to be in the following format *
+* Date_of_sequencing.barcode01.fa *
+* e.g. 2019_12_16.barcode01.fa *
+
+
 1. git clone repository
 2. cd discoAnt
 3. bash discoAnt_setup.sh
