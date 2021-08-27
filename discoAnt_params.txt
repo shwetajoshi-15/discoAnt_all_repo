@@ -1,5 +1,3 @@
-### Assign paramters for discoAnt.sh ###
-
 GENE=GRIA1
 STRAND=+
 CHR=chr5
@@ -7,7 +5,7 @@ GENE_START=153489615
 GENE_END=153813873
 
 FASTA=/path/to/folder/fasta
-DISCOANT=/path/to/folder/discoAnt
+DISCOANT=/pathto/folder/discoAnt
 
 PROGRAMS=$DISCOANT/programs
 SCRIPTS=$DISCOANT/scripts
