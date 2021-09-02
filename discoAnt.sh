@@ -106,7 +106,7 @@ then
    base=$(basename $filename .fa)
    echo "On sample : $base"
    
-   samtools index $DISCOANT/$GENE/minimap2/${base}_pri_sorted.bam
+   samtools index $DISCOANT/$GENE/minimap2_target/${base}_pri_sorted.bam
    samtools view $DISCOANT/$GENE/minimap2/${base}_pri_sorted.bam "$CHR:$GENE_START-$GENE_END" > $DISCOANT/$GENE/minimap2_target/${base}_pri_tar_sorted.bam
  
    done
@@ -203,6 +203,13 @@ fi
 echo "Annotating the transcripts with SQANTI3"
 
    python $PROGRAMS/SQANTI3/sqanti3_qc.py \
+   $DISCOANT/$GENE/stringtie/"$GENE"_clean_STRINGTIE.gtf \
+   $REF_HG38/gencode.v35.annotation.gtf $REF_HG38/GRCh38.p13.genome_edit.fa \
+   --cage_peak $REF_HG38/refTSS_v3.3_human_coordinate.hg38.bed \
+   --polyA_peak $REF_HG38/atlas.clusters.2.0.GRCh38.96.bed --polyA_motif_list $REF_HG38/human.polyA.list.txt \
+   -d $DISCOANT/$GENE/sqanti3 -o "$GENE"_clean
+   
+      python $PROGRAMS/SQANTI3/sqanti3_qc.py \
    $DISCOANT/$GENE/stringtie/"$GENE"_STRINGTIE.gtf \
    $REF_HG38/gencode.v35.annotation.gtf $REF_HG38/GRCh38.p13.genome_edit.fa \
    --cage_peak $REF_HG38/refTSS_v3.3_human_coordinate.hg38.bed \
@@ -212,13 +219,13 @@ echo "Annotating the transcripts with SQANTI3"
 echo "Creating a metagene FASTA"
    ## check if the strand variable is assigned correctly
 
-   cat $DISCOANT/$GENE/stringtie/"$GENE"_STRINGTIE.gtf | awk '{ if ($3 == "exon") { print } }' | awk 'BEGIN{OFS="\t"}{print $1, $4-1, $5, ".", ".", "$STRAND"}' > $DISCOANT/$GENE/stringtie/"$GENE"_all_exons.bed
+   cat $DISCOANT/$GENE/stringtie/"$GENE"_clean_STRINGTIE.gtf | awk '{ if ($3 == "exon") { print } }' | awk 'BEGIN{OFS="\t"}{print $1, $4-1, $5, ".", ".", "$STRAND"}' > $DISCOANT/$GENE/stringtie/"$GENE"_clean_all_exons.bed
 
-   bedtools getfasta -s -fi $REF_HG38/GRCh38.p13.genome_edit.fa -bed $DISCOANT/$GENE/stringtie/"$GENE"_all_exons.bed -fo $DISCOANT/$GENE/stringtie/"$GENE"_meta_gene_exons.fa
+   bedtools getfasta -s -fi $REF_HG38/GRCh38.p13.genome_edit.fa -bed $DISCOANT/$GENE/stringtie/"$GENE"_clean_all_exons.bed -fo $DISCOANT/$GENE/stringtie/"$GENE"_clean_meta_gene_exons.fa
 
-   echo ">meta_gene_$GENE" > $DISCOANT/$GENE/stringtie/"$GENE"_meta_gene.fa && \
-   cat $DISCOANT/$GENE/stringtie/"$GENE"_meta_gene_exons.fa | grep -v "^>" | tr -d '\n' >> $DISCOANT/$GENE/stringtie/"$GENE"_meta_gene.fa && \
-   echo >> $DISCOANT/$GENE/stringtie/"$GENE"_meta_gene.fa 
+   echo ">meta_gene_$GENE" > $DISCOANT/$GENE/stringtie/"$GENE"_clean_meta_gene.fa && \
+   cat $DISCOANT/$GENE/stringtie/"$GENE"_clean_meta_gene_exons.fa | grep -v "^>" | tr -d '\n' >> $DISCOANT/$GENE/stringtie/"$GENE"_clean_meta_gene.fa && \
+   echo >> $DISCOANT/$GENE/stringtie/"$GENE"_clean_meta_gene.fa 
  
 echo "Mapping sample FASTA to the metagene"
 
