@@ -106,7 +106,7 @@ then
    base=$(basename $filename .fa)
    echo "On sample : $base"
    
-   samtools index $DISCOANT/$GENE/minimap2_target/${base}_pri_sorted.bam
+   samtools index $DISCOANT/$GENE/minimap2/${base}_pri_sorted.bam
    samtools view $DISCOANT/$GENE/minimap2/${base}_pri_sorted.bam "$CHR:$GENE_START-$GENE_END" > $DISCOANT/$GENE/minimap2_target/${base}_pri_tar_sorted.bam
  
    done
