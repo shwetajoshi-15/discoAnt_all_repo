@@ -1,7 +1,7 @@
 #/bin/bash!
 
 ## This script performs the following steps
-## 1. Quanlity control for the fasta files 
+## 1. Quantify control for the fasta files 
 ## 1.a. Generates a file with no. of reads
 ## 1.b. average read length
 ## 1.c. read length in each barcode/sample 
