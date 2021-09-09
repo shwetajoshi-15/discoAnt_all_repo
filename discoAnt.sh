@@ -231,7 +231,7 @@ echo "Creating a metagene FASTA"
 echo "Modifying stringtie GTF to create a metagene GTF"
 (under construction; create this file on text editor/excel)
 
- cat $DISCOANT/$GENE/stringtie/"$GENE"_clean_STRINGTIE.gtf | awk '{ if ($3 == "exon") { print } }' | sed 's/; exon_number.*/;/ > $DISCOANT/$GENE/stringtie/GRIA1_STRINGTIE_modified_tmp1.gtf 
+ cat $DISCOANT/$GENE/stringtie/"$GENE"_clean_STRINGTIE.gtf | awk '{ if ($3 == "exon") { print } }' | sed 's/; exon_number.*/;/' > $DISCOANT/$GENE/stringtie/GRIA1_STRINGTIE_modified_tmp1.gtf 
  
 echo "Mapping sample FASTA to the metagene"
 
