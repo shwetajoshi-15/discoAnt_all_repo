@@ -29,6 +29,7 @@ mkdir -p $DISCOANT/$GENE/transcriptclean
 mkdir -p $DISCOANT/$GENE/stringtie
 mkdir -p $DISCOANT/$GENE/sqanti3
 mkdir -p $DISCOANT/$GENE/minimap2_metagene
+mkdir -p $DISCOANT/$GENE/featurecounts
 
 echo "Extracting the number of reads and read lengths"
 
@@ -126,7 +127,7 @@ if [[ ! -f $DISCOANT/$GENE/minimap2_target/"$GENE"_sorted_pri_tar_merged_align.C
 
 then
 
-   samtools merge $DISCOANT/$GENE/minimap2_target/"$GENE"_merged.bam $DISCOANT/$GENE/minimap2_target/*_pri_tar_sorted.bam 
+   samtools merge -f $DISCOANT/$GENE/minimap2_target/"$GENE"_merged.bam $DISCOANT/$GENE/minimap2_target/*_pri_tar_sorted.bam 
    samtools sort $DISCOANT/$GENE/minimap2_target/"$GENE"_merged.bam > $DISCOANT/$GENE/minimap2_target/"$GENE"_merged_sorted.bam
    samtools index $DISCOANT/$GENE/minimap2_target/"$GENE"_merged_sorted.bam 
    samtools view -h -o $DISCOANT/$GENE/minimap2_target/"$GENE"_merged.sam $DISCOANT/$GENE/minimap2_target/"$GENE"_merged_sorted.bam
@@ -226,6 +227,11 @@ echo "Creating a metagene FASTA"
    echo ">meta_gene_$GENE" > $DISCOANT/$GENE/stringtie/"$GENE"_clean_meta_gene.fa && \
    cat $DISCOANT/$GENE/stringtie/"$GENE"_clean_meta_gene_exons.fa | grep -v "^>" | tr -d '\n' >> $DISCOANT/$GENE/stringtie/"$GENE"_clean_meta_gene.fa && \
    echo >> $DISCOANT/$GENE/stringtie/"$GENE"_clean_meta_gene.fa 
+
+echo "Modifying stringtie GTF to create a metagene GTF"
+(under construction; create this file on text editor/excel)
+
+ cat $DISCOANT/$GENE/stringtie/"$GENE"_clean_STRINGTIE.gtf | awk '{ if ($3 == "exon") { print } }' | sed 's/; exon_number.*/;/ > $DISCOANT/$GENE/stringtie/GRIA1_STRINGTIE_modified_tmp1.gtf 
  
 echo "Mapping sample FASTA to the metagene"
 
@@ -238,3 +244,11 @@ echo "Mapping sample FASTA to the metagene"
    minimap2 -ax splice $DISCOANT/$GENE/stringtie/"$GENE"_meta_gene.fa $FASTA/${base}.fa > $DISCOANT/$GENE/minimap2_metagene/${base}.sam 
 
    done
+
+echo "Generating read counts for the metagene alignments"
+
+featureCounts -L -g transcript_id -a $DISCOANT/$GENE/stringtie/GRIA1_STRINGTIE_modified.gtf \
+-o $DISCOANT/$GENE/featurecounts/"$GENE"_counts.txt $DISCOANT/$GENE/minimap2_metagene/*_pri_sorted.bam
+
+cat $DISCOANT/$GENE/featurecounts/"$GENE"_counts.txt | cut -f2,3,4,5,6 --complement | awk 'FNR > 2' > $DISCOANT/$GENE/featurecounts/"$GENE"_counts_matrix.txt
+cat $DISCOANT/$GENE/"$GENE"_samplenames.txt | tr '\n' '\t' | paste - $DISCOANT/$GENE/featurecounts/"$GENE"_counts_matrix.txt > $DISCOANT/$GENE/featurecounts/"$GENE"_counts_matrix_samplenames.txt
