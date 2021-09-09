@@ -247,7 +247,7 @@ echo "Mapping sample FASTA to the metagene"
 
 echo "Generating read counts for the metagene alignments"
 
-featureCounts -L -g transcript_id -a $DISCOANT/$GENE/stringtie/GRIA1_STRINGTIE_modified.gtf \
+featureCounts -L -g transcript_id -a $DISCOANT/$GENE/stringtie/$GENE_STRINGTIE_modified.gtf \
 -o $DISCOANT/$GENE/featurecounts/"$GENE"_counts.txt $DISCOANT/$GENE/minimap2_metagene/*_pri_sorted.bam
 
 cat $DISCOANT/$GENE/featurecounts/"$GENE"_counts.txt | cut -f2,3,4,5,6 --complement | awk 'FNR > 2' > $DISCOANT/$GENE/featurecounts/"$GENE"_counts_matrix.txt
