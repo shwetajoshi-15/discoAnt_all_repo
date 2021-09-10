@@ -248,18 +248,27 @@ fi
 ##########                                         ##########
 
 echo "Modifying stringtie GTF to create a metagene GTF"
-	
+
+if [[ ! -f $DISCOANT/$GENE/stringtie/"$GENE"_metagene_gtf.COMPLETED ]]
+then
 	Rscript $PROGRAMS/exon_coord_conversion_plus_strand.R --col1 $DISCOANT/$GENE/stringtie/"$GENE"_exon_start.txt \
 	--col2 $DISCOANT/$GENE/stringtie/"$GENE"_exon_end.txt \
 	--out $DISCOANT/$GENE/stringtie/"$GENE"_metagene_exon_coord.txt
 	
 	cat $DISCOANT/$GENE/stringtie/"$GENE"_clean_STRINGTIE.gtf | \
 	awk '{ if ($3 == "exon") { print $9,$10,$11,$12 } }' > $DISCOANT/$GENE/stringtie/"$GENE"_STRINGTIE_modified_tmp1.gtf 
+	
 	cat $DISCOANT/$GENE/stringtie/"$GENE"_metagene_exon_coord.txt | \
-	awk '{print -v "meta_gene_"$GENE"""\t""Stringtie""\t""exon""\t"$1"\t"$2"\t"".""\t""$STRAND""\t""."}' > $DISCOANT/$GENE/stringtie/"$GENE"_STRINGTIE_modified_tmp2.gtf
+	awk '{print -v "meta_gene_"$GENE"" "\t" "Stringtie" "\t" "exon" "\t" $1 "\t" $2 "\t" "." "\t" -v "$STRAND" "\t" "."}' > \
+	$DISCOANT/$GENE/stringtie/"$GENE"_STRINGTIE_modified_tmp2.gtf
  
  	paste $DISCOANT/$GENE/stringtie/"$GENE"_STRINGTIE_modified_tmp2.gtf \
 	$DISCOANT/$GENE/stringtie/"$GENE"_STRINGTIE_modified_tmp1.gtf > $DISCOANT/$GENE/stringtie/"$GENE"_STRINGTIE_modified.gtf
+	
+	touch $DISCOANT/$GENE/stringtie/"$GENE"_metagene_gtf.COMPLETED	
+else
+echo "Metagene is present in $DISCOANT/$GENE/stringtie"	
+fi  	
 	
 ##########                                                  ##########
 ########## 9. Align the samples fasta files to the metagene ##########
@@ -309,7 +318,8 @@ fi
 
 echo "Merging SQANTI3 annotations with counts matrix"
 
-paste $DISCOANT/$GENE/sqanti3/"$GENE"_sqanti_matrix.txt $DISCOANT/$GENE/featurecounts/"$GENE"_counts_matrix_samplenames.txt | column -s $'\t' -t > $DISCOANT/$GENE/results/$GENE_annotated_transcript_counts.txt
+paste $DISCOANT/$GENE/sqanti3/"$GENE"_sqanti_matrix.txt $DISCOANT/$GENE/featurecounts/"$GENE"_counts_matrix_samplenames.txt | \
+column -s $'\t' -t > $DISCOANT/$GENE/results/$GENE_annotated_transcript_counts.txt
 
 ##########                                     ##########
 ########## 12. Generate a heatmap and PCA plot ##########
