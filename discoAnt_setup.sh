@@ -5,7 +5,6 @@ conda env create -f $DISCOANT/discoAnt.env.yml
 
 ## Installing programs
 
-mkdir -p $PROGRAMS
 mkdir -p $PROGRAMS/TranscriptClean
 mkdir -p $PROGRAMS/SQANTI3
 mkdir -p $PROGRAMS/cDNA_Cupcake
