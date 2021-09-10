@@ -15,7 +15,8 @@ Create a folder called "fasta" and edit the name based on the sequencing date an
 7. cd /path/to/folder/discoAnt/programs/cDNA_Cupcake
 8. python setup.py build
 9. python setup.py install
-10. Submit discoAnt.sh in the appropriate submission script
+
+#### Refer to the sample submission scripts for running the pipeline on a HPC cluster.
 
 ## What does discoAnt do?
 
