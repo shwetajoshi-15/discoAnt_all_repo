@@ -2,18 +2,19 @@
 The repository is under-construction.
 
 **Prepare FASTA files in a folder**
-Date_of_sequencing.barcode01.fa - e.g. 2019_12_16.barcode01.fa
+Date_of_sequencing.barcode01.fa (e.g. 2019_12_16.barcode01.fa)
 
 
 1. git clone repository
 2. cd discoAnt
-3. Change discoAnt_params.txt
-4. bash discoAnt_setup.sh
-5. conda activate discoAnt.env
-6. cd /path/to/folder/discoAnt/programs/cDNA_Cupcake
-7. python setup.py build
-8. python setup.py install
-9. Submit discoAnt.sh in the appropriate submission script
+3. Update discoAnt_params.txt with - Gene name, start and end coordinates and strands
+4. Update discoAnt_params.txt with - path to FASTA folder and discoAnt folder
+5. When running the pipeline for the first time - bash discoAnt_setup.sh
+6. conda activate discoAnt.env
+7. cd /path/to/folder/discoAnt/programs/cDNA_Cupcake
+8. python setup.py build
+9. python setup.py install
+10. Submit discoAnt.sh in the appropriate submission script
 
 ## What does discoAnt do?
 
