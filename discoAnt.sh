@@ -228,7 +228,7 @@ echo "Creating a metagene FASTA"
 ## check if the strand variable is assigned correctly
 if [[ ! -f $DISCOANT/$GENE/stringtie/"$GENE"_metagene.COMPLETED ]]
 then
-	cat $DISCOANT/$GENE/stringtie/"$GENE"_clean_STRINGTIE.gtf | awk '{ if ($3 == "exon") { print } }' | awk 'BEGIN{OFS="\t"}{print $1, $4-1, $5, ".", ".", -v "$STRAND"}' > $DISCOANT/$GENE/stringtie/"$GENE"_clean_all_exons.bed
+	cat $DISCOANT/$GENE/stringtie/"$GENE"_clean_STRINGTIE.gtf | awk '{ if ($3 == "exon") { print } }' | awk 'BEGIN{OFS="\t"}{print $1, $4, $5, ".", ".", -v "$STRAND"}' > $DISCOANT/$GENE/stringtie/"$GENE"_clean_all_exons.bed
 
 	bedtools getfasta -s -fi $REF_HG38/GRCh38.p13.genome_edit.fa \
 	-bed $DISCOANT/$GENE/stringtie/"$GENE"_clean_all_exons.bed -fo $DISCOANT/$GENE/stringtie/"$GENE"_clean_meta_gene_exons.fa
@@ -251,6 +251,9 @@ echo "Modifying stringtie GTF to create a metagene GTF"
 
 if [[ ! -f $DISCOANT/$GENE/stringtie/"$GENE"_metagene_gtf.COMPLETED ]]
 then
+	cat $DISCOANT/$GENE/stringtie/"$GENE"_clean_STRINGTIE.gtf | awk '{ if ($3 == "exon") { print $4 } }' > $DISCOANT/$GENE/stringtie/"$GENE"_exon_start.txt
+	cat $DISCOANT/$GENE/stringtie/"$GENE"_clean_STRINGTIE.gtf | awk '{ if ($3 == "exon") { print $5 } }' > $DISCOANT/$GENE/stringtie/"$GENE"_exon_end.txt
+	
 	Rscript $PROGRAMS/exon_coord_conversion_plus_strand.R --col1 $DISCOANT/$GENE/stringtie/"$GENE"_exon_start.txt \
 	--col2 $DISCOANT/$GENE/stringtie/"$GENE"_exon_end.txt \
 	--out $DISCOANT/$GENE/stringtie/"$GENE"_metagene_exon_coord.txt
