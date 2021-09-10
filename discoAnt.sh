@@ -254,7 +254,7 @@ then
 	cat $DISCOANT/$GENE/stringtie/"$GENE"_clean_STRINGTIE.gtf | awk '{ if ($3 == "exon") { print $4 } }' > $DISCOANT/$GENE/stringtie/"$GENE"_exon_start.txt
 	cat $DISCOANT/$GENE/stringtie/"$GENE"_clean_STRINGTIE.gtf | awk '{ if ($3 == "exon") { print $5 } }' > $DISCOANT/$GENE/stringtie/"$GENE"_exon_end.txt
 	
-	Rscript $PROGRAMS/exon_coord_conversion_plus_strand.R --col1 $DISCOANT/$GENE/stringtie/"$GENE"_exon_start.txt \
+	Rscript $PROGRAMS/exon_coord_conversion.R --col1 $DISCOANT/$GENE/stringtie/"$GENE"_exon_start.txt \
 	--col2 $DISCOANT/$GENE/stringtie/"$GENE"_exon_end.txt \
 	--out $DISCOANT/$GENE/stringtie/"$GENE"_metagene_exon_coord.txt
 	
