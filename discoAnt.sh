@@ -168,7 +168,7 @@ echo "Constructing transcripts based on the corrected alignments"
 if [[ ! -f $DISCOANT/$GENE/stringtie/"$GENE"_transcripts_pre_clean.COMPLETED ]]
 then
 
-	stringtie -t $DISCOANT/$GENE/minimap2_target/"$GENE"_merged_sorted.bam \
+	stringtie -L -t $DISCOANT/$GENE/minimap2_target/"$GENE"_merged_sorted.bam \
 	-G $REF_HG38/gencode.v35.annotation.gtf \
 	-A $DISCOANT/$GENE/stringtie/"$GENE"_gene_abund.tab \
 	-C $DISCOANT/$GENE/stringtie/"$GENE"_cov_ref.gtf \
@@ -183,7 +183,7 @@ fi
 if [[ ! -f $DISCOANT/$GENE/stringtie/"$GENE"_transcripts_post_clean.COMPLETED ]]
 then
 
-	stringtie -t $DISCOANT/$GENE/transcriptclean/"$GENE"_clean_sorted.bam \
+	stringtie -L -t $DISCOANT/$GENE/transcriptclean/"$GENE"_clean_sorted.bam \
 	-G $REF_HG38/gencode.v35.annotation.gtf \
 	-A $DISCOANT/$GENE/stringtie/"$GENE"_clean_gene_abund.tab \
 	-C $DISCOANT/$GENE/stringtie/"$GENE"_clean_cov_ref.gtf \
