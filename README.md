@@ -2,8 +2,9 @@
 The repository is under-construction.
 
 ## Prepare FASTA files in a folder
-Date_of_sequencing.barcode01.fa (e.g. 2019_12_16.barcode01.fa)
+Create a folder called "fasta" and edit the name based on the sequencing date and barcode number (e.g. 2019_12_16.barcode01.fa).
 
+## Setting up discoAnt
 
 1. git clone repository
 2. cd discoAnt
