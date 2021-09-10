@@ -211,7 +211,7 @@ then
 	--polyA_peak $REF_HG38/atlas.clusters.2.0.GRCh38.96.bed --polyA_motif_list $REF_HG38/human.polyA.list.txt \
 	-d $DISCOANT/$GENE/sqanti3 -o "$GENE"_clean
       
-	$DISCOANT/$GENE/sqanti3/$GENE_clean_classification.txt | awk 'BEGIN{OFS="\t"}{print $1,$2,$3,$4,$5,$6,$7,$8,$15,$17,$30,$31,$37,$40,$41,$42,$43}' > $DISCOANT/$GENE/sqanti3/"$GENE"_sqanti_matrix.txt
+	cat $DISCOANT/$GENE/sqanti3/$GENE_clean_classification.txt | awk 'BEGIN{OFS="\t"}{print $1,$2,$3,$4,$5,$6,$7,$8,$15,$17,$30,$31,$37,$40,$41,$42,$43}' > $DISCOANT/$GENE/sqanti3/"$GENE"_sqanti_matrix.txt
 
 	touch $DISCOANT/$GENE/stringtie/"$GENE"_sqanti3_clean.COMPLETED
 
