@@ -147,7 +147,7 @@ if [[ ! -f $DISCOANT/$GENE/transcriptclean/"$GENE"_merged_clean_sorted.COMPLETED
 then
 
 	python $PROGRAMS/TranscriptClean/TranscriptClean.py \
-	--sam $DISCOANT/$GENE/minimap2/"$GENE"_merged.sam \
+	--sam $DISCOANT/$GENE/minimap2_target/"$GENE"_merged.sam \
 	--primaryOnly --genome $REF_HG38/GRCh38.p13.genome_edit.fa \
 	--outprefix $DISCOANT/$GENE/transcriptclean/$GENE
 	
@@ -321,8 +321,7 @@ fi
 
 echo "Merging SQANTI3 annotations with counts matrix"
 
-paste $DISCOANT/$GENE/sqanti3/"$GENE"_sqanti_matrix.txt $DISCOANT/$GENE/featurecounts/"$GENE"_counts_matrix_samplenames.txt | \
-column -s $'\t' -t > $DISCOANT/$GENE/results/$GENE_annotated_transcript_counts.txt
+paste $DISCOANT/$GENE/sqanti3/"$GENE"_sqanti_matrix.txt $DISCOANT/$GENE/featurecounts/"$GENE"_counts_matrix_samplenames.txt | column -s $'\t' -t > $DISCOANT/$GENE/results/$GENE_annotated_transcript_counts.txt
 
 ##########                                     ##########
 ########## 12. Generate a heatmap and PCA plot ##########
