@@ -286,7 +286,7 @@ then
 	base=$(basename $filename .fa)
 	echo "On sample : $base" 
 
-	minimap2 -ax splice $DISCOANT/$GENE/stringtie/"$GENE"_meta_gene.fa $FASTA/${base}.fa > $DISCOANT/$GENE/minimap2_metagene/${base}.sam 
+	minimap2 -ax splice $DISCOANT/$GENE/stringtie/"$GENE"_clean_meta_gene.fa $FASTA/${base}.fa > $DISCOANT/$GENE/minimap2_metagene/${base}.sam 
 	samtools view -S -h -b $DISCOANT/$GENE/minimap2_metagene/${base}.sam | samtools sort - > $DISCOANT/$GENE/minimap2_metagene/${base}_sorted.bam
 	samtools view -h -F 2308 $DISCOANT/$GENE/minimap2_metagene/${base}_sorted.bam | samtools sort - > $DISCOANT/$GENE/minimap2_metagene/${base}_pri_sorted.bam
 	samtools index $DISCOANT/$GENE/minimap2_metagene/${base}_pri_sorted.bam
