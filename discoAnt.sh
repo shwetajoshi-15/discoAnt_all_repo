@@ -262,8 +262,7 @@ then
 	awk '{ if ($3 == "exon") { print $9,$10,$11,$12 } }' > $DISCOANT/$GENE/stringtie/"$GENE"_STRINGTIE_modified_tmp1.gtf 
 	
 	cat $DISCOANT/$GENE/stringtie/"$GENE"_metagene_exon_coord.txt | \
-	awk '{print -v "meta_gene_"$GENE"" "\t" "Stringtie" "\t" "exon" "\t" $1 "\t" $2 "\t" "." "\t" -v "$STRAND" "\t" "."}' > \
-	$DISCOANT/$GENE/stringtie/"$GENE"_STRINGTIE_modified_tmp2.gtf
+	awk -v GENE="$GENE" -v STRAND="$STRAND" 'BEGIN{{OFS="\t"}}{ print "meta_gene_"GENE, "Stringtie", "exon", $1, $2, ".", STRAND, "."}' > $DISCOANT/$GENE/stringtie/"$GENE"_STRINGTIE_modified_tmp2.gtf
  
  	paste $DISCOANT/$GENE/stringtie/"$GENE"_STRINGTIE_modified_tmp2.gtf \
 	$DISCOANT/$GENE/stringtie/"$GENE"_STRINGTIE_modified_tmp1.gtf > $DISCOANT/$GENE/stringtie/"$GENE"_STRINGTIE_modified.gtf
