@@ -1,7 +1,7 @@
 # discoAnt
 The repository is under-construction.
 
-**Prepare FASTA files in a folder**
+## Prepare FASTA files in a folder
 Date_of_sequencing.barcode01.fa (e.g. 2019_12_16.barcode01.fa)
 
 
