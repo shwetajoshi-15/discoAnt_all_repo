@@ -205,7 +205,7 @@ if [[ ! -f $DISCOANT/$GENE/stringtie/"$GENE"_sqanti3_clean.COMPLETED ]]
 then
 
 	python $PROGRAMS/SQANTI3-1.3/sqanti3_qc.py \
-	$DISCOANT/$GENE/stringtie/"$GENE"_clean_STRINGTIE.gtf \
+	--gtf $DISCOANT/$GENE/stringtie/"$GENE"_clean_STRINGTIE.gtf \
 	$REF_HG38/gencode.v35.annotation.gtf $REF_HG38/GRCh38.p13.genome_edit.fa \
 	--cage_peak $REF_HG38/refTSS_v3.3_human_coordinate.hg38.bed \
 	--polyA_peak $REF_HG38/atlas.clusters.2.0.GRCh38.96.bed --polyA_motif_list $REF_HG38/human.polyA.list.txt \
