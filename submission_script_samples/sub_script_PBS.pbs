@@ -1,0 +1,17 @@
+#!/bin/bash
+#PBS -q normal
+#PBS -lstorage=scratch/tv28+gdata/tv28
+#PBS -l walltime=20:00:00
+#PBS -l mem=64GB
+#PBS -l jobfs=100GB
+#PBS -l ncpus=12
+#PBS -l wd
+#PBS -j oe
+#PBS -m abe
+#PBS -M username@email.com
+#PBS -N discoAnt
+
+source activate discoAnt.env
+module load samtools/1.9
+
+bash /g/data/tv28/sj9072/discoAnt/discoAnt.sh
