@@ -201,7 +201,7 @@ fi
 
 echo "Annotating the transcripts with SQANTI3"
 
-if [[ ! -f $DISCOANT/$GENE/stringtie/"$GENE"_sqanti3_clean.COMPLETED ]]
+if [[ ! -f $DISCOANT/$GENE/sqanti3/"$GENE"_sqanti3_clean.COMPLETED ]]
 then
 
 	python $PROGRAMS/SQANTI3-1.3/sqanti3_qc.py \
@@ -213,7 +213,7 @@ then
       
 	cat $DISCOANT/$GENE/sqanti3/$GENE_clean_classification.txt | awk 'BEGIN{OFS="\t"}{print $1,$2,$3,$4,$5,$6,$7,$8,$15,$17,$30,$31,$37,$40,$41,$42,$43}' > $DISCOANT/$GENE/sqanti3/"$GENE"_sqanti_matrix.txt
 
-	touch $DISCOANT/$GENE/stringtie/"$GENE"_sqanti3_clean.COMPLETED
+	touch $DISCOANT/$GENE/sqanti3/"$GENE"_sqanti3_clean.COMPLETED
 
 else
 echo "Annotated transcripts are present in $DISCOANT/$GENE/sqanti3"
@@ -307,7 +307,7 @@ then
 	-o $DISCOANT/$GENE/featurecounts/"$GENE"_counts.txt $DISCOANT/$GENE/minimap2_metagene/*_pri_sorted.bam
 
 	cat $DISCOANT/$GENE/featurecounts/"$GENE"_counts.txt | cut -f2,3,4,5,6 --complement | awk 'FNR > 2' > $DISCOANT/$GENE/featurecounts/"$GENE"_counts_matrix.txt
-	cat $DISCOANT/$GENE/"$GENE"_samplenames.txt | tr '\n' '\t' | paste - $DISCOANT/$GENE/featurecounts/"$GENE"_counts_matrix.txt | column -s $'\t' -t > $DISCOANT/$GENE/featurecounts/"$GENE"_counts_matrix_samplenames.txt
+	cat $DISCOANT/$GENE/featurecounts/"$GENE"_samplenames.txt | tr '\n' '\t' | awk 'FNR > 0' - $DISCOANT/$GENE/featurecounts/"$GENE"_counts_matrix.txt > $DISCOANT/$GENE/featurecounts/"$GENE"_counts_matrix_samplenames.txt
 
 	touch $DISCOANT/$GENE/featurecounts/"$GENE"_metagene_counts.COMPLETED
 else
