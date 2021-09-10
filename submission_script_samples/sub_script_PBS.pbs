@@ -14,4 +14,4 @@
 source activate discoAnt.env
 module load samtools/1.9
 
-bash /g/data/tv28/sj9072/discoAnt/discoAnt.sh
+bash /path/to/folder/discoAnt/discoAnt.sh
