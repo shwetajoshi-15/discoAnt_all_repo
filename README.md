@@ -19,18 +19,22 @@ Create a folder called "fasta" and edit the name based on the sequencing date an
 
 ## What does discoAnt do?
 
-1. Quanlity control for the fasta files 
+1. Quality control for the fasta files 
 1.a. Generates a file with no. of reads
 1.b. average read length
 1.c. read length in each barcode/sample 
-2. Align (and correcting) the sample fasta files to reference genome
-3. Merge the primary alignments
-4. Generate transcript files (GTF) for the merged alignments
-4. Classify the transcripts based on known annotations 
-6. Create a metagene based on the transcripts
-7. Align the samples fasta files to the metagene
-9. Create transcript counts based on the alignments to the metagene (under construction)
-10. Normalise the counts (under construction)
-11. Generate a heatmap and PCA plot (under construction)
+2. Align the sample fasta files to reference genome
+3. Filter out off-target alignments
+4. Merge alignments from all samples
+5. Correct the alignments based on reference genome
+6. Generate transcript files (GTF) for the merged alignments
+7. Classify the transcripts based on known annotations 
+8. Generating a metagene
+8.a. Create a metagene based on known and novel exons
+8.b. Create a GTF file for the metagene
+9. Align the samples fasta files to the metagene
+10. Generate counts based on the alignments to the metagene
+11. Merge the transcript annotations and counts in "results"
+12. Generate a heatmap and PCA plot (under construction)
 
 
