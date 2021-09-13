@@ -217,6 +217,23 @@ then
 
 else
 echo "Annotated transcripts are present in $DISCOANT/$GENE/sqanti3"
+fi  
+
+if [[ ! -f $DISCOANT/$GENE/sqanti3/"$GENE"_sqanti3.COMPLETED ]]
+then
+	python $PROGRAMS/SQANTI3-1.3/sqanti3_qc.py \
+	--gtf $DISCOANT/$GENE/stringtie/"$GENE"_STRINGTIE.gtf \
+	$REF_HG38/gencode.v35.annotation.gtf $REF_HG38/GRCh38.p13.genome_edit.fa \
+	--cage_peak $REF_HG38/refTSS_v3.3_human_coordinate.hg38.bed \
+	--polyA_peak $REF_HG38/atlas.clusters.2.0.GRCh38.96.bed --polyA_motif_list $REF_HG38/human.polyA.list.txt \
+	-d $DISCOANT/$GENE/sqanti3 -o "$GENE"
+      
+	cat $DISCOANT/$GENE/sqanti3/"$GENE"_classification.txt | awk 'BEGIN{OFS="\t"}{print $1,$2,$3,$4,$5,$6,$7,$8,$15,$17,$30,$31,$37,$40,$41,$42,$43}' > $DISCOANT/$GENE/sqanti3/"$GENE"_sqanti_matrix.txt
+
+	touch $DISCOANT/$GENE/sqanti3/"$GENE"_sqanti3.COMPLETED
+
+else
+echo "Annotated transcripts are present in $DISCOANT/$GENE/sqanti3"
 fi   
 
 ##########                                                       ##########
@@ -237,6 +254,24 @@ then
 	cat $DISCOANT/$GENE/stringtie/"$GENE"_clean_meta_gene_exons.fa | grep -v "^>" | tr -d '\n' >> $DISCOANT/$GENE/stringtie/"$GENE"_clean_meta_gene.fa && \
 	echo >> $DISCOANT/$GENE/stringtie/"$GENE"_clean_meta_gene.fa 
    
+	touch $DISCOANT/$GENE/stringtie/"$GENE"_metagene_clean.COMPLETED
+	
+else
+echo "Metagene is present in $DISCOANT/$GENE/stringtie"	
+fi   
+
+if [[ ! -f $DISCOANT/$GENE/stringtie/"$GENE"_metagene.COMPLETED ]]
+then
+
+	cat $DISCOANT/$GENE/stringtie/"$GENE"_STRINGTIE.gtf | awk '{ if ($3 == "exon") { print } }' | awk 'BEGIN{OFS="\t"}{print $1, $4, $5, ".", ".", -v "$STRAND"}' > $DISCOANT/$GENE/stringtie/"$GENE"_all_exons.bed
+
+	bedtools getfasta -s -fi $REF_HG38/GRCh38.p13.genome_edit.fa \
+	-bed $DISCOANT/$GENE/stringtie/"$GENE"_all_exons.bed -fo $DISCOANT/$GENE/stringtie/"$GENE"_meta_gene_exons.fa
+
+	echo ">meta_gene_$GENE" > $DISCOANT/$GENE/stringtie/"$GENE"_meta_gene.fa && \
+	cat $DISCOANT/$GENE/stringtie/"$GENE"_meta_gene_exons.fa | grep -v "^>" | tr -d '\n' >> $DISCOANT/$GENE/stringtie/"$GENE"_meta_gene.fa && \
+	echo >> $DISCOANT/$GENE/stringtie/"$GENE"_meta_gene.fa 
+   
 	touch $DISCOANT/$GENE/stringtie/"$GENE"_metagene.COMPLETED
    
 else
@@ -249,27 +284,51 @@ fi
 
 echo "Modifying stringtie GTF to create a metagene GTF"
 
-if [[ ! -f $DISCOANT/$GENE/stringtie/"$GENE"_metagene_gtf.COMPLETED ]]
+if [[ ! -f $DISCOANT/$GENE/stringtie/clean_metagene/"$GENE"_metagene_gtf.COMPLETED ]]
 then
-	cat $DISCOANT/$GENE/stringtie/"$GENE"_clean_STRINGTIE.gtf | awk '{ if ($3 == "exon") { print $4 } }' > $DISCOANT/$GENE/stringtie/"$GENE"_exon_start.txt
-	cat $DISCOANT/$GENE/stringtie/"$GENE"_clean_STRINGTIE.gtf | awk '{ if ($3 == "exon") { print $5 } }' > $DISCOANT/$GENE/stringtie/"$GENE"_exon_end.txt
+	cat $DISCOANT/$GENE/stringtie/"$GENE"_clean_STRINGTIE.gtf | awk '{ if ($3 == "exon") { print $4 } }' > $DISCOANT/$GENE/stringtie/clean_metagene/"$GENE"_exon_start.txt
+	cat $DISCOANT/$GENE/stringtie/"$GENE"_clean_STRINGTIE.gtf | awk '{ if ($3 == "exon") { print $5 } }' > $DISCOANT/$GENE/stringtie/clean_metagene/"$GENE"_exon_end.txt
 	
-	Rscript $PROGRAMS/exon_coord_conversion.R --col1 $DISCOANT/$GENE/stringtie/"$GENE"_exon_start.txt \
-	--col2 $DISCOANT/$GENE/stringtie/"$GENE"_exon_end.txt \
-	--out $DISCOANT/$GENE/stringtie/"$GENE"_metagene_exon_coord.txt
+	Rscript $PROGRAMS/exon_coord_conversion.R --col1 $DISCOANT/$GENE/stringtie/clean_metagene/"$GENE"_exon_start.txt \
+	--col2 $DISCOANT/$GENE/stringtie/clean_metagene/"$GENE"_exon_end.txt \
+	--out $DISCOANT/$GENE/stringtie/clean_metagene/"$GENE"_metagene_exon_coord.txt
 	
-	cat $DISCOANT/$GENE/stringtie/"$GENE"_clean_STRINGTIE.gtf | \
-	awk '{ if ($3 == "exon") { print $9,$10,$11,$12 } }' > $DISCOANT/$GENE/stringtie/"$GENE"_STRINGTIE_modified_tmp1.gtf 
+	cat $DISCOANT/$GENE/stringtie/clean_metagene/"$GENE"_clean_STRINGTIE.gtf | \
+	awk '{ if ($3 == "exon") { print $9,$10,$11,$12 } }' > $DISCOANT/$GENE/stringtie/clean_metagene/"$GENE"_STRINGTIE_modified_tmp1.gtf 
 	
-	cat $DISCOANT/$GENE/stringtie/"$GENE"_metagene_exon_coord.txt | \
-	awk -v GENE="$GENE" -v STRAND="$STRAND" 'BEGIN{{OFS="\t"}}{ print "meta_gene_"GENE, "Stringtie", "exon", $1, $2, ".", STRAND, "."}' > $DISCOANT/$GENE/stringtie/"$GENE"_STRINGTIE_modified_tmp2.gtf
+	cat $DISCOANT/$GENE/stringtie/clean_metagene/"$GENE"_metagene_exon_coord.txt | \
+	awk -v GENE="$GENE" -v STRAND="$STRAND" 'BEGIN{{OFS="\t"}}{ print "meta_gene_"GENE, "Stringtie", "exon", $1, $2, ".", STRAND, "."}' > $DISCOANT/$GENE/stringtie/clean_metagene/"$GENE"_STRINGTIE_modified_tmp2.gtf
  
- 	paste $DISCOANT/$GENE/stringtie/"$GENE"_STRINGTIE_modified_tmp2.gtf \
-	$DISCOANT/$GENE/stringtie/"$GENE"_STRINGTIE_modified_tmp1.gtf > $DISCOANT/$GENE/stringtie/"$GENE"_STRINGTIE_modified.gtf
+ 	paste $DISCOANT/$GENE/stringtie/clean_metagene/"$GENE"_STRINGTIE_modified_tmp2.gtf \
+	$DISCOANT/$GENE/stringtie/clean_metagene/"$GENE"_STRINGTIE_modified_tmp1.gtf > $DISCOANT/$GENE/stringtie/clean_metagene/"$GENE"_STRINGTIE_modified.gtf
 	
-	touch $DISCOANT/$GENE/stringtie/"$GENE"_metagene_gtf.COMPLETED	
+	touch $DISCOANT/$GENE/stringtie/clean_metagene/"$GENE"_metagene_gtf.COMPLETED
+
 else
-echo "Metagene is present in $DISCOANT/$GENE/stringtie"	
+echo "Metagene is present in $DISCOANT/$GENE/stringtie/clean_metagene"	
+fi  	
+
+if [[ ! -f $DISCOANT/$GENE/stringtie/metagene/"$GENE"_metagene_gtf.COMPLETED ]]
+then	
+	cat $DISCOANT/$GENE/stringtie/metagene/"$GENE"_STRINGTIE.gtf | awk '{ if ($3 == "exon") { print $4 } }' > $DISCOANT/$GENE/stringtie/metagene/"$GENE"_exon_start.txt
+	cat $DISCOANT/$GENE/stringtie/metagene/"$GENE"_STRINGTIE.gtf | awk '{ if ($3 == "exon") { print $5 } }' > $DISCOANT/$GENE/stringtie/metagene/"$GENE"_exon_end.txt
+	
+	Rscript $PROGRAMS/exon_coord_conversion.R --col1 $DISCOANT/$GENE/stringtie/metagene/"$GENE"_exon_start.txt \
+	--col2 $DISCOANT/$GENE/stringtie/metagene/"$GENE"_exon_end.txt \
+	--out $DISCOANT/$GENE/stringtie/metagene/"$GENE"_metagene_exon_coord.txt
+	
+	cat $DISCOANT/$GENE/stringtie/metagene/"$GENE"_clean_STRINGTIE.gtf | \
+	awk '{ if ($3 == "exon") { print $9,$10,$11,$12 } }' > $DISCOANT/$GENE/stringtie/metagene/"$GENE"_STRINGTIE_modified_tmp1.gtf 
+	
+	cat $DISCOANT/$GENE/stringtie/metagene/"$GENE"_metagene_exon_coord.txt | \
+	awk -v GENE="$GENE" -v STRAND="$STRAND" 'BEGIN{{OFS="\t"}}{ print "meta_gene_"GENE, "Stringtie", "exon", $1, $2, ".", STRAND, "."}' > $DISCOANT/$GENE/stringtie/metagene/"$GENE"_STRINGTIE_modified_tmp2.gtf
+ 
+ 	paste $DISCOANT/$GENE/stringtie/metagene/"$GENE"_STRINGTIE_modified_tmp2.gtf \
+	$DISCOANT/$GENE/stringtie/metagene/"$GENE"_STRINGTIE_modified_tmp1.gtf > $DISCOANT/$GENE/stringtie/metagene/"$GENE"_STRINGTIE_modified.gtf
+	
+	touch $DISCOANT/$GENE/stringtie/metagene/"$GENE"_metagene_gtf.COMPLETED
+else
+echo "Metagene is present in $DISCOANT/$GENE/stringtie/metagene/"	
 fi  	
 	
 ##########                                                  ##########
@@ -278,6 +337,23 @@ fi
 
 echo "Mapping sample FASTA to the metagene"
 
+if [[ ! -f $DISCOANT/$GENE/minimap2_metagene/"$GENE"_sorted_pri_align_clean.COMPLETED ]]
+then
+	for filename in $FASTA/*.fa
+	do
+	base=$(basename $filename .fa)
+	echo "On sample : $base" 
+
+	minimap2 -ax splice $DISCOANT/$GENE/stringtie/"$GENE"_clean_meta_gene.fa $FASTA/${base}.fa > $DISCOANT/$GENE/minimap2_metagene/${base}_clean.sam 
+	samtools view -S -h -b $DISCOANT/$GENE/minimap2_metagene/${base}_clean.sam | samtools sort - > $DISCOANT/$GENE/minimap2_metagene/${base}_clean_sorted.bam
+	samtools view -h -F 2308 $DISCOANT/$GENE/minimap2_metagene/${base}_clean_sorted.bam | samtools sort - > $DISCOANT/$GENE/minimap2_metagene/${base}_clean_pri_sorted.bam
+	samtools index $DISCOANT/$GENE/minimap2_metagene/${base}_clean_pri_sorted.bam
+	done
+	touch $DISCOANT/$GENE/minimap2_metagene/"$GENE"_sorted_pri_align_clean.COMPLETED
+else
+echo "Alignments to the metagene are present in $DISCOANT/$GENE/minimap2_metagene"	
+fi
+
 if [[ ! -f $DISCOANT/$GENE/minimap2_metagene/"$GENE"_sorted_pri_align.COMPLETED ]]
 then
 	for filename in $FASTA/*.fa
@@ -285,7 +361,7 @@ then
 	base=$(basename $filename .fa)
 	echo "On sample : $base" 
 
-	minimap2 -ax splice $DISCOANT/$GENE/stringtie/"$GENE"_clean_meta_gene.fa $FASTA/${base}.fa > $DISCOANT/$GENE/minimap2_metagene/${base}.sam 
+	minimap2 -ax splice $DISCOANT/$GENE/stringtie/"$GENE"_meta_gene.fa $FASTA/${base}.fa > $DISCOANT/$GENE/minimap2_metagene/${base}.sam 
 	samtools view -S -h -b $DISCOANT/$GENE/minimap2_metagene/${base}.sam | samtools sort - > $DISCOANT/$GENE/minimap2_metagene/${base}_sorted.bam
 	samtools view -h -F 2308 $DISCOANT/$GENE/minimap2_metagene/${base}_sorted.bam | samtools sort - > $DISCOANT/$GENE/minimap2_metagene/${base}_pri_sorted.bam
 	samtools index $DISCOANT/$GENE/minimap2_metagene/${base}_pri_sorted.bam
@@ -303,13 +379,26 @@ echo "Generating read counts for the metagene alignments"
 
 if [[ ! -f $DISCOANT/$GENE/featurecounts/"$GENE"_metagene_counts.COMPLETED ]]
 then
-	featureCounts -L -g transcript_id -a $DISCOANT/$GENE/stringtie/"$GENE"_STRINGTIE_modified.gtf \
+	featureCounts -L -g transcript_id -a $DISCOANT/$GENE/stringtie/metagene/"$GENE"_STRINGTIE_modified.gtf \
 	-o $DISCOANT/$GENE/featurecounts/"$GENE"_counts.txt $DISCOANT/$GENE/minimap2_metagene/*_pri_sorted.bam
 
 	cat $DISCOANT/$GENE/featurecounts/"$GENE"_counts.txt | cut -f2,3,4,5,6 --complement | awk 'FNR > 2' > $DISCOANT/$GENE/featurecounts/"$GENE"_counts_matrix.txt
 	cat $DISCOANT/$GENE/featurecounts/"$GENE"_samplenames.txt | tr '\n' '\t' | awk 'FNR > 0' - $DISCOANT/$GENE/featurecounts/"$GENE"_counts_matrix.txt > $DISCOANT/$GENE/featurecounts/"$GENE"_counts_matrix_samplenames.txt
 
 	touch $DISCOANT/$GENE/featurecounts/"$GENE"_metagene_counts.COMPLETED
+else
+echo "Counts matrix is present in $DISCOANT/$GENE/featurecounts"	
+fi
+
+if [[ ! -f $DISCOANT/$GENE/featurecounts/"$GENE"_metagene_counts_clean.COMPLETED ]]
+then
+	featureCounts -L -g transcript_id -a $DISCOANT/$GENE/stringtie/clean_metagene/"$GENE"_STRINGTIE_modified.gtf \
+	-o $DISCOANT/$GENE/featurecounts/"$GENE"_clean_counts.txt $DISCOANT/$GENE/minimap2_metagene/*_clean_pri_sorted.bam
+
+	cat $DISCOANT/$GENE/featurecounts/"$GENE"_clean_counts.txt | cut -f2,3,4,5,6 --complement | awk 'FNR > 2' > $DISCOANT/$GENE/featurecounts/"$GENE"_clean_counts_matrix.txt
+	cat $DISCOANT/$GENE/featurecounts/"$GENE"_samplenames.txt | tr '\n' '\t' | awk 'FNR > 0' - $DISCOANT/$GENE/featurecounts/"$GENE"_clean_counts_matrix.txt > $DISCOANT/$GENE/featurecounts/"$GENE"_clean_counts_matrix_samplenames.txt
+
+	touch $DISCOANT/$GENE/featurecounts/"$GENE"_metagene_counts_clean.COMPLETED
 else
 echo "Counts matrix is present in $DISCOANT/$GENE/featurecounts"	
 fi
