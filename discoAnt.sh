@@ -312,8 +312,8 @@ fi
 
 if [[ ! -f $DISCOANT/$GENE/stringtie/metagene/"$GENE"_metagene_gtf.COMPLETED ]]
 then	
-	cat $DISCOANT/$GENE/stringtie/metagene/"$GENE"_STRINGTIE.gtf | awk '{ if ($3 == "exon") { print $4 } }' > $DISCOANT/$GENE/stringtie/metagene/"$GENE"_exon_start.txt
-	cat $DISCOANT/$GENE/stringtie/metagene/"$GENE"_STRINGTIE.gtf | awk '{ if ($3 == "exon") { print $5 } }' > $DISCOANT/$GENE/stringtie/metagene/"$GENE"_exon_end.txt
+	cat $DISCOANT/$GENE/stringtie/"$GENE"_STRINGTIE.gtf | awk '{ if ($3 == "exon") { print $4 } }' > $DISCOANT/$GENE/stringtie/metagene/"$GENE"_exon_start.txt
+	cat $DISCOANT/$GENE/stringtie/"$GENE"_STRINGTIE.gtf | awk '{ if ($3 == "exon") { print $5 } }' > $DISCOANT/$GENE/stringtie/metagene/"$GENE"_exon_end.txt
 	
 	Rscript $PROGRAMS/exon_coord_conversion.R --col1 $DISCOANT/$GENE/stringtie/metagene/"$GENE"_exon_start.txt \
 	--col2 $DISCOANT/$GENE/stringtie/metagene/"$GENE"_exon_end.txt \
