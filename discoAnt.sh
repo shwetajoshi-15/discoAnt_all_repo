@@ -30,6 +30,8 @@ mkdir -p $DISCOANT/$GENE/minimap2
 mkdir -p $DISCOANT/$GENE/minimap2_target
 mkdir -p $DISCOANT/$GENE/transcriptclean
 mkdir -p $DISCOANT/$GENE/stringtie
+mkdir -p $DISCOANT/$GENE/stringtie/metagene
+mkdir -p $DISCOANT/$GENE/stringtie/clean_metagene
 mkdir -p $DISCOANT/$GENE/sqanti3
 mkdir -p $DISCOANT/$GENE/minimap2_metagene
 mkdir -p $DISCOANT/$GENE/featurecounts
