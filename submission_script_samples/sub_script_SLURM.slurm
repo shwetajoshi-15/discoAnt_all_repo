@@ -14,5 +14,6 @@
 
 module load gcc/8.3.0
 module load samtools/1.9
+source activate discoAnt.env
 
 bash /path/to/folder/discoAnt/discoAnt.sh
