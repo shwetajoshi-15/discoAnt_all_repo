@@ -112,9 +112,9 @@ echo "Extracting alignments to the target region/gene"
 if [[ ! -f $DISCOANT/$GENE/minimap2_target/"$GENE"_sorted_pri_tar_align.COMPLETED  ]]
 then
 
-	for filename in $FASTA/*.fa
+	for filename in $DISCOANT/$GENE/minimap2/*_pri_sorted.bam
 	do
-	base=$(basename $filename .fa)
+	base=$(basename $filename _pri_sorted.bam)
 	echo "On sample : $base"
    	samtools index $DISCOANT/$GENE/minimap2/${base}_pri_sorted.bam
 	samtools view -h $DISCOANT/$GENE/minimap2/${base}_pri_sorted.bam "$CHR:$GENE_START-$GENE_END" > $DISCOANT/$GENE/minimap2_target/${base}_pri_tar_sorted.bam
@@ -347,9 +347,10 @@ echo "Mapping sample FASTA to the metagene"
 
 if [[ ! -f $DISCOANT/$GENE/minimap2_metagene/clean_metagene/"$GENE"_sorted_pri_align_clean.COMPLETED ]]
 then
-	for filename in $FASTA/*.fa
+
+	for filename in $DISCOANT/$GENE/minimap2/*_pri_sorted.bam
 	do
-	base=$(basename $filename .fa)
+	base=$(basename $filename _pri_sorted.bam)
 	echo "On sample : $base"
 
 	minimap2 -ax splice $DISCOANT/$GENE/stringtie/"$GENE"_clean_meta_gene.fa $FASTA/${base}.fa > $DISCOANT/$GENE/minimap2_metagene/clean_metagene/${base}_clean.sam
@@ -364,9 +365,10 @@ fi
 
 if [[ ! -f $DISCOANT/$GENE/minimap2_metagene/metagene/"$GENE"_sorted_pri_align.COMPLETED ]]
 then
-	for filename in $FASTA/*.fa
+
+	for filename in $DISCOANT/$GENE/minimap2/*_pri_sorted.bam
 	do
-	base=$(basename $filename .fa)
+	base=$(basename $filename _pri_sorted.bam)
 	echo "On sample : $base"
 
 	minimap2 -ax splice $DISCOANT/$GENE/stringtie/"$GENE"_meta_gene.fa $FASTA/${base}.fa > $DISCOANT/$GENE/minimap2_metagene/metagene/${base}.sam
@@ -387,9 +389,10 @@ echo "Mapping sample FASTA to the metagene"
 
 if [[ ! -f $DISCOANT/$GENE/minimap2_metagene_transcriptome/clean_metagene/"$GENE"_sorted_pri_align_clean.COMPLETED ]]
 then
-        for filename in $FASTA/*.fa
-        do
-        base=$(basename $filename .fa)
+
+	for filename in $DISCOANT/$GENE/minimap2/*_pri_sorted.bam
+	do
+	base=$(basename $filename _pri_sorted.bam)
         echo "On sample : $base"
 
         minimap2 -ax splice $DISCOANT/$GENE/sqanti3/"$GENE"_clean_corrected.fasta $FASTA/${base}.fa > $DISCOANT/$GENE/minimap2_metagene_transcriptome/clean_metagene/${base}_clean.sam
@@ -404,9 +407,10 @@ fi
 
 if [[ ! -f $DISCOANT/$GENE/minimap2_metagene_transcriptome/metagene/"$GENE"_sorted_pri_align.COMPLETED ]]
 then
-        for filename in $FASTA/*.fa
-        do
-        base=$(basename $filename .fa)
+
+	for filename in $DISCOANT/$GENE/minimap2/*_pri_sorted.bam
+	do
+	base=$(basename $filename _pri_sorted.bam)
         echo "On sample : $base"
 
         minimap2 -ax splice $DISCOANT/$GENE/sqanti3/"$GENE"_corrected.fasta  $FASTA/${base}.fa > $DISCOANT/$GENE/minimap2_metagene_transcriptome/metagene/${base}.sam
@@ -460,9 +464,10 @@ echo "Quantifying transcripts with salmon"
 
 if [[ ! -f $DISCOANT/$GENE/salmon/"$GENE"_salmon_clean.COMPLETED ]]
 then
-        for filename in $FASTA/*.fa
-        do
-        base=$(basename $filename .fa)
+
+	for filename in $DISCOANT/$GENE/minimap2/*_pri_sorted.bam
+	do
+	base=$(basename $filename _pri_sorted.bam)
         echo "On sample : $base"
 
         salmon quant -t $DISCOANT/$GENE/sqanti3/"$GENE"_clean_corrected.fasta -l A -a $DISCOANT/$GENE/minimap2_metagene_transcriptome/clean_metagene/${base}_clean_pri_sorted.bam -o $DISCOANT/$GENE/salmon/${base}_clean
@@ -475,9 +480,10 @@ fi
 
 if [[ ! -f $DISCOANT/$GENE/salmon/"$GENE"_salmon.COMPLETED ]]
 then
-        for filename in $FASTA/*.fa
-        do
-        base=$(basename $filename .fa)
+
+	for filename in $DISCOANT/$GENE/minimap2/*_pri_sorted.bam
+	do
+	base=$(basename $filename _pri_sorted.bam)
         echo "On sample : $base"
 
         salmon quant -t $DISCOANT/$GENE/sqanti3/"$GENE"_corrected.fasta -l A -a $DISCOANT/$GENE/minimap2_metagene_transcriptome/metagene/${base}_pri_sorted.bam -o $DISCOANT/$GENE/salmon/${base}
@@ -488,10 +494,11 @@ else
 echo "Alignments to the metagene are present in $DISCOANT/$GENE/salmon/metagene"
 fi
 
+## under construction
 
-        for filename in $FASTA/*.fa
-        do
-        base=$(basename $filename .fa)
+	for filename in $DISCOANT/$GENE/minimap2/*_pri_sorted.bam
+	do
+	base=$(basename $filename _pri_sorted.bam)
         echo "On sample : $base"
 
 	cut -d\t -f4 $DISCOANT/$GENE/salmon/${base}/quant.sf | awk 'FNR > 1' | paste - | column -s $'\t' -t >> $DISCOANT/$GENE/salmon/"$GENE"_salmon_TPM_tmp1.txt
