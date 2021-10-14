@@ -18,7 +18,7 @@ Create a folder called "fasta" and edit the name based on the sequencing date an
 
 #### Refer to the sample submission scripts for running the pipeline on a HPC cluster.
 
-## What does discoAnt (v) do?
+## What does discoAnt do?
 
 1. Quality control for the fasta files 
 1.a. Generates a file with no. of reads
